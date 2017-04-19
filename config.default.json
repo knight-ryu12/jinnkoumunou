@@ -1,0 +1,13 @@
+{
+  "twitter": {
+    "consumerKey": "",
+    "consumerSecret": "",
+    "accessToken": "",
+    "accessSecret": ""
+  },
+  "mysql":{
+    "url":"",
+    "username":"",
+    "password":""
+  }
+}
