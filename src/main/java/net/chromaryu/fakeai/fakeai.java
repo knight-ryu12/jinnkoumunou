@@ -1,26 +1,29 @@
 	package net.chromaryu.fakeai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import net.chromaryu.fakeai.api.Sword;
-import net.chromaryu.fakeai.api.twitterSerializer;
 import net.chromaryu.fakeai.config.Config;
 import net.chromaryu.fakeai.mysql.mySqlHandler;
+import net.chromaryu.fakeai.mysql.mySqlHandlerOld;
 import net.chromaryu.fakeai.thread.MySqlSyncer;
 import net.chromaryu.fakeai.thread.ifrit.*;
 import twitter4j.*;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
-import java.io.BufferedReader;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Base64;
 import java.util.Timer;
 import java.util.concurrent.*;
 
@@ -39,9 +42,29 @@ public class fakeai {
     final static ResponceThread rt = new ResponceThread();
     public static Semaphore g_sm = new Semaphore(5);
     public static ExecutorService es = Executors.newCachedThreadPool();
+    static Path s1 = Paths.get("key/keyfile.key");
+
     public static void main(String[] args) throws TwitterException,IOException {
+        om.enable(SerializationFeature.INDENT_OUTPUT);
         //HashMap<String,String> str = new HashMap<>();
         Config config = om.readValue(new File("config.json"),Config.class);
+        if(config.getAes().get("key").equals("") || config.getAes().get("iv").equals("")) {
+            // Key Gen. Maybe.
+            try {
+                SecureRandom sr = SecureRandom.getInstance("NativePRNGNonBlocking");
+                KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+                keyGenerator.init(256,sr);
+                SecretKey seckey = keyGenerator.generateKey();
+                config.getAes().put("key", Base64.getEncoder().encodeToString(seckey.getEncoded()));
+                byte[] iv = new byte[16];
+                sr.nextBytes(iv);
+                config.getAes().put("iv",Base64.getEncoder().encodeToString(iv));
+
+                om.writeValue(new File("config.json"),config);
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+        }
 
         mysql = new mySqlHandler(config);
         mysql.makeTable();
@@ -63,7 +86,7 @@ public class fakeai {
         TwitterStream ts = new TwitterStreamFactory(cf).getInstance();
         ts.addListener(new Stream());
         LocalDateTime ldt = LocalDateTime.now();
-        //tw.updateStatus("Bot Start! t:"+ldt.format(DateTimeFormatter.ISO_DATE_TIME) );
+        tw.updateStatus("ちさき「こんにちは！　きどうじこくは:"+ldt.format(DateTimeFormatter.ISO_DATE_TIME)+"だよ！」" );
         Timer t = new Timer(true);
         t.scheduleAtFixedRate(new MySqlSyncer(), 0,300000);
         ts.user();

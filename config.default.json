@@ -9,5 +9,9 @@
     "url":"",
     "username":"",
     "password":""
+  },
+  "aes" : {
+    "iv" : "",
+    "key" : ""
   }
 }

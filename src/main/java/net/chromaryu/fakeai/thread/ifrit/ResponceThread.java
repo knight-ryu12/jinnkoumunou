@@ -35,7 +35,9 @@ public class ResponceThread implements Runnable {
     public void run() {
         //while (!fakeai.cld.isEmpty()) {
         while (!EXIT) {
+            try {
             synchronized (this) {
+
                 if (fakeai.cld.isEmpty()) {
                     try {
                         wait();
@@ -46,7 +48,7 @@ public class ResponceThread implements Runnable {
 
                 Status status = fakeai.cld.poll();
                 logger.info("I:" + status.getText());
-                try {
+
                     if (!status.getText().startsWith("RT")) {
                         for (String b64keyword : testal.keySet()) {
                             logger.debug(b64keyword);
@@ -62,12 +64,13 @@ public class ResponceThread implements Runnable {
                             }
                         }
                     }
-
+                }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    continue;
                 }
 
-            }
+
         }
     }
     //}//

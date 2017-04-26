@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ser.Serializers;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import net.chromaryu.fakeai.api.Sword;
+import net.chromaryu.fakeai.api.keySerializer;
 import net.chromaryu.fakeai.api.twitterSerializer;
 import net.chromaryu.fakeai.thread.MySqlSyncAsTask;
 
@@ -27,6 +28,13 @@ public class initializer {
         threadPool(6, 1, 3000);
 
         path("/api", () -> {
+            path("/key",() -> {
+                post("/getauthkey",(request, response) -> {
+                    keySerializer s;
+
+                    return request.headers();
+                });
+            });
             path("/words", () -> {
                 put("/add", (req, res) -> {
                     Sword s;
