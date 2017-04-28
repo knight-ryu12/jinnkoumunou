@@ -17,6 +17,7 @@ import java.util.List;
 
 import static net.chromaryu.fakeai.fakeai.es;
 import static net.chromaryu.fakeai.fakeai.testal;
+import static net.chromaryu.fakeai.fakeai.tw;
 import static spark.Spark.*;
 /**
  * Created by midgard on 17/04/13.
@@ -31,8 +32,10 @@ public class initializer {
             path("/key",() -> {
                 post("/getauthkey",(request, response) -> {
                     keySerializer s;
+                    if(request.headers().contains("Authorization")) {
 
-                    return request.headers();
+                    }
+                    return "0";
                 });
             });
             path("/words", () -> {
@@ -40,7 +43,6 @@ public class initializer {
                     Sword s;
                     try {
                         s = om.readValue(req.body(), Sword.class);
-                        //TODO: Change to use DB
                         String b64key = Base64.getEncoder().encodeToString(s.getKeyword().getBytes(Charset.forName("UTF-8")));
                         String b64res = Base64.getEncoder().encodeToString(s.getResponce().getBytes(Charset.forName("UTF-8")));
                         fakeai.mysql.addResponce(b64key,b64res);
@@ -68,6 +70,7 @@ public class initializer {
                 });
             });
             path("/twitter", () -> {
+                get("/ratelimit",(request,response) -> tw.getRateLimitStatus().keySet());
                 get("/follow",(request,response) -> {
                     System.out.println(request.queryParams());
                     if(request.queryMap().hasKey("follow")) {

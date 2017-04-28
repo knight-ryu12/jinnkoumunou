@@ -17,6 +17,7 @@ public class MySqlSyncAsTask implements Runnable {
         try {
             sm.acquire();
             ListMultimap<String,String> map= fakeai.mysql.getAllResponce();
+            fakeai.respNum.incrementAndGet();
             fakeai.testal = ArrayListMultimap.create(map);
             //System.out.println(map);
             //fakeai.testal.putAll(map);

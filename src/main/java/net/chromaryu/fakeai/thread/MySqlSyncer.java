@@ -19,8 +19,9 @@ public class MySqlSyncer extends TimerTask {
     @Override
     public void run() {
         try {
-        ListMultimap<String,String> map= fakeai.mysql.getAllResponce();
-        fakeai.testal = ArrayListMultimap.create(map);
+            ListMultimap<String,String> map= fakeai.mysql.getAllResponce();
+            fakeai.testal = ArrayListMultimap.create(map);
+            fakeai.respNum.incrementAndGet();
             //fakeai.testal.putAll(map);
         } catch (Exception e) {
             e.printStackTrace();

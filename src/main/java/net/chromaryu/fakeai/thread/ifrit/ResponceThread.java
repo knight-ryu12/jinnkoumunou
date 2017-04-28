@@ -10,6 +10,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static net.chromaryu.fakeai.fakeai.*;
 /**
@@ -56,7 +57,8 @@ public class ResponceThread implements Runnable {
                             if (status.getText().matches(keyw)) {
                                 List<String> ls = testal.get(b64keyword);
                                 if (ls.size() > 0) {
-                                    logger.info("RESP ENGINE> Got:" + ls.size());
+
+                                    logger.info("Got Matched Size:" + ls.size() + " Resp Number:"+atomicInteger.getAndIncrement());
                                     String resp = new String(Base64.getDecoder().decode(ls.get(sr.nextInt(ls.size()))), "UTF-8");
                                     logger.info("RespSend:" + resp);
                                     fakeai.tw.updateStatus(new StatusUpdate("@" + status.getUser().getScreenName() + " " + resp).inReplyToStatusId(status.getId()));
