@@ -27,7 +27,7 @@ public class Stream extends UserStreamAdapter {
     public void onStatus(Status status) {
         try {
             //ArrayList<String> strings = null;
-            SecureRandom sr = SecureRandom.getInstance("NativePRNGNonBlocking");
+            SecureRandom sr = SecureRandom.getInstance("NativePRNGNonBlocking"); // Only For Linux!!!!!!!
             LocalDateTime ldt = LocalDateTime.now();
             String str = "fav:" + status.getFavoriteCount() + " rt:" + status.getRetweetCount();
             System.out.println(ldt.format(dtf) + " @" + status.getUser().getScreenName() + " " + str + " " + status.getText());
