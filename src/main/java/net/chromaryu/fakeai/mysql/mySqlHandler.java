@@ -5,10 +5,16 @@ import com.google.common.collect.ListMultimap;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import net.chromaryu.fakeai.config.Config;
+import net.chromaryu.fakeai.fakeai;
+import org.apache.commons.codec.binary.Hex;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Base64;
 
 /**
  * Created by midgard on 17/04/25.
@@ -36,9 +42,26 @@ public class mySqlHandler {
                             ") ENGINE=InnoDB DEFAULT CHARSET=utf8"
             );
             ps.execute();
+            PreparedStatement ps2 = connection.prepareStatement(
+                    "CREATE TABLE IF NOT EXISTS authTable" +
+                            "(" +
+                            "id int not null auto_increment PRIMARY KEY," +
+                            "authkey VARCHAR(256) null," +
+                            "timedkey VARCHAR(256) null," +
+                            "mtimeactive VARCHAR(256) null" +
+                            ") ENGINE=InnoDB DEFAULT CHARSET =utf8"
+            );
+            ps2.execute();
         }catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public byte[] getOTK(String u) {
+        return new byte[2*32];
+    }
+    public byte[] addOTK(String authkey) { // Returns Stringed OTK
+        //OTK calculated with authkey. it's pair
+        return new byte[2*32];
     }
     public void addResponce(String k,String v) {
         try(Connection connection = ds.getConnection()) {

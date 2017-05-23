@@ -11,7 +11,9 @@ import net.chromaryu.fakeai.thread.MySqlSyncAsTask;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 
@@ -31,13 +33,43 @@ public class initializer {
         path("/api", () -> {
             path("/key",() -> {
                 post("/getauthkey",(request, response) -> {
-                    keySerializer s;
-                    if(request.headers().contains("Authorization")) {
-
+                    //keySerializer s;
+                    if(!request.headers().contains("Authorization")) {
+                        halt(403,"ちさき「ちょっとだめかな。くろまに言ってみてね！」");
                     }
-                    return "0";
+                    String[] args = request.headers("Authorization").split(" ");
+                    if(args.length == 2) {
+                        if(!args[0].equals("Bearer")) halt(406,"ちさき「Authorizationのへっだーがまちがってるよ！」\nAuthorization:Bearer <AUTHKEY>");
+                    }
+                    //fakeai.mysql.addOTK()
+                    return request.headers("Authorization")+"\n";
+                });
+                get("/generateauthkey",(req,res) -> {
+                    // DATA: <TWID>:<RANDOM-64Byte-MSG>
+                    System.out.println(req.ip());
+                    String b64 = null;
+                    String[] args = null;
+                    byte[] authkey = new byte[16*2];
+                    if(req.ip().matches("192\\.168\\.[0-9]\\.*[0-9]+") || req.ip().matches("0:0:0:0:0:0:0:1")) {
+                        // Sooo This is localhosted... maybe???
+                        //return "OK IP:"+req.ip();
+
+                        args = req.body().split(":");
+                        if(args.length != 2) {
+                            halt(400,"ちさき「リクエストが不正だよ！」");
+                        }
+                        byte[] auth = fakeai.cipher.update(Arrays.toString(args).getBytes("UTF-8"));
+                        b64 = Base64.getEncoder().encodeToString(auth);
+                        fakeai.mysql.addOTK(b64);
+
+
+                        //byte[] otk = fakeai.mysql.addOTK(authkey);
+                    }
+                    return b64;
+                    //return "NG IP:"+req.ip();
                 });
             });
+
             path("/words", () -> {
                 put("/add", (req, res) -> {
                     Sword s;

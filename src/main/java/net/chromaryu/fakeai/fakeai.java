@@ -58,7 +58,7 @@ public class fakeai {
         if(config.getAes().get("key").equals("") || config.getAes().get("iv").equals("")) {
             // Key Gen. Maybe.
             try {
-                SecureRandom sr = SecureRandom.getInstance("NativePRNGNonBlocking");
+                SecureRandom sr = SecureRandom.getInstance("NativePRNGNonBlocking"); // Linux ONLY! look at Javadoc!
                 KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
                 keyGenerator.init(256,sr);
                 SecretKey seckey = keyGenerator.generateKey();
@@ -100,7 +100,7 @@ public class fakeai {
         TwitterStream ts = new TwitterStreamFactory(cf).getInstance();
         ts.addListener(new Stream());
         LocalDateTime ldt = LocalDateTime.now();
-        tw.updateStatus("ちさき「こんにちは！　きどうじこくは:"+ldt.format(DateTimeFormatter.ISO_DATE_TIME)+"だよ！」" );
+        //tw.updateStatus("ちさき「こんにちは！　きどうじこくは:"+ldt.format(DateTimeFormatter.ISO_DATE_TIME)+"だよ！」" );
         Timer t = new Timer(true);
         t.scheduleAtFixedRate(new MySqlSyncer(), 0L,300000L);
         t.scheduleAtFixedRate(new StatusThread(), 60000L, 1800000L);
