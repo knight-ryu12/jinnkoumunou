@@ -6,7 +6,15 @@ import java.util.HashMap;
  * Created by midgard on 17/04/13.
  */
 public class Config {
-    private HashMap<String,String> twitter,mysql,aes;
+    private HashMap<String,String> twitter,mysql,aes,apiai;
+
+    public HashMap<String, String> getApiai() {
+        return apiai;
+    }
+
+    public void setApiai(HashMap<String, String> apiai) {
+        this.apiai = apiai;
+    }
 
     public HashMap<String, String> getTwitter() {
         return twitter;

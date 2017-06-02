@@ -48,13 +48,16 @@ public class fakeai {
     public static ExecutorService es = Executors.newCachedThreadPool();
     static Path s1 = Paths.get("key/keyfile.key");
     public static AtomicInteger atomicInteger = new AtomicInteger();
+    public static AtomicInteger apiaiReqC = new AtomicInteger();
     public static AtomicInteger respNum = new AtomicInteger();
     public static Cipher cipher;
+    public static Config config;
     public static void main(String[] args) throws TwitterException, IOException, NoSuchPaddingException, NoSuchAlgorithmException {
         om.enable(SerializationFeature.INDENT_OUTPUT);
         cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         //HashMap<String,String> str = new HashMap<>();
-        Config config = om.readValue(new File("config.json"),Config.class);
+
+        config = om.readValue(new File("config.json"),Config.class);
         if(config.getAes().get("key").equals("") || config.getAes().get("iv").equals("")) {
             // Key Gen. Maybe.
             try {
@@ -100,10 +103,10 @@ public class fakeai {
         TwitterStream ts = new TwitterStreamFactory(cf).getInstance();
         ts.addListener(new Stream());
         LocalDateTime ldt = LocalDateTime.now();
-        //tw.updateStatus("ちさき「こんにちは！　きどうじこくは:"+ldt.format(DateTimeFormatter.ISO_DATE_TIME)+"だよ！」" );
+        tw.updateStatus("ちさき「こんにちは！　きどうじこくは:"+ldt.format(DateTimeFormatter.ISO_DATE_TIME)+"だよ！」" );
         Timer t = new Timer(true);
         t.scheduleAtFixedRate(new MySqlSyncer(), 0L,300000L);
-        t.scheduleAtFixedRate(new StatusThread(), 60000L, 1800000L);
+        //t.scheduleAtFixedRate(new StatusThread(), 60000L, 1800000L);
         ts.user();
         //BufferedReader buf = new BufferedReader(new InputStreamReader(System.in));
         //at.addListener(new Stream());

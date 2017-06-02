@@ -1,5 +1,6 @@
 package net.chromaryu.fakeai.thread.ifrit;
 
+import net.chromaryu.fakeai.api.apiAiHandler;
 import net.chromaryu.fakeai.fakeai;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +52,7 @@ public class ResponceThread implements Runnable {
                 logger.info("I:" + status.getText());
 
                     if (!status.getText().startsWith("RT")) {
+                        //logger.info(apiAiHandler.submit(status.getText(), String.valueOf(fakeai.apiaiReqC.getAndIncrement())));
                         for (String b64keyword : testal.keySet()) {
                             logger.debug(b64keyword);
                             String keyw = new String(Base64.getDecoder().decode(b64keyword.getBytes()), "UTF-8");
