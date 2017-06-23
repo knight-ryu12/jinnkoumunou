@@ -58,11 +58,13 @@ public class ResponceThread implements Runnable {
                     Status status = fakeai.cld.poll();
                     logger.info("I:" + status.getText());
                     tweeted = false;
-                    if (!status.getText().startsWith("RT")) {
+                    if (!status.isRetweet()) {
                         if (status.getInReplyToUserId() == fakeai.tw.getId()) {
 
                             continue;
                         }
+                        if(status.getInReplyToScreenName() != null) {continue;}
+
                         //logger.info(apiAiHandler.submit(status.getText(), String.valueOf(fakeai.apiaiReqC.getAndIncrement())));
                         for (String b64keyword : testal.keySet()) {
                             if (!tweeted) {
