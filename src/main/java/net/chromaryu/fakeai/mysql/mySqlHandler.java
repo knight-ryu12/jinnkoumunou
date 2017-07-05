@@ -63,7 +63,7 @@ public class mySqlHandler {
         //OTK calculated with authkey. it's pair
         return new byte[2*32];
     }
-    public void addResponce(String k,String v) {
+    public void addResponse(String k,String v) {
         try(Connection connection = ds.getConnection()) {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO chisakiTable(keyword, responce) VALUES (?,?)");
             ps.setString(1,k);
@@ -73,7 +73,7 @@ public class mySqlHandler {
             e.printStackTrace();
         }
     }
-    public ListMultimap<String,String> getAllResponce() {
+    public ListMultimap<String,String> getAllResponse() {
         ListMultimap<String,String> multimap = ArrayListMultimap.create();
         try(Connection connection = ds.getConnection()) {
             PreparedStatement ps = connection.prepareStatement(
