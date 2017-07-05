@@ -32,7 +32,7 @@ public class Stream extends UserStreamAdapter {
             String str = "fav:" + status.getFavoriteCount() + " rt:" + status.getRetweetCount();
             System.out.println(ldt.format(dtf) + " @" + status.getUser().getScreenName() + " " + str + " " + status.getText());
             // Checking for Word
-            if (status.getUser().getId() != fakeai.tw.getId()) {
+            //if (status.getUser().getId() != fakeai.tw.getId()) {
                 fakeai.cld.add(status);
                 synchronized (fakeai.rt) {
                     fakeai.rt.notify();
@@ -66,7 +66,7 @@ public class Stream extends UserStreamAdapter {
                 }
 
             }*/
-            }
+           // }
             //}
         } catch (Exception e) {
             e.printStackTrace();
@@ -103,4 +103,6 @@ public class Stream extends UserStreamAdapter {
 
         }
     }
+
+
 }
